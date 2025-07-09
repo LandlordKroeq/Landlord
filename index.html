@@ -248,9 +248,21 @@
     ::-webkit-scrollbar-track {
       background-color: #000;
     }
+
+    /* PARTICLES BACKGROUND */
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
   </style>
 </head>
 <body>
+  <div id="particles-js"></div>
+
   <div id="loading-screen">
     Loading Rust server...
     <div class="spinner"></div>
@@ -287,7 +299,7 @@
             <img src="https://avatars.akamai.steamstatic.com/e778c271a36595648d15a612190946cccb131422_full.jpg" alt="Member Avatar" />
             <h2>Akuma</h2>
             <p>Sniper</p>
-          <div class="co-leader-badge">Co-Leader</div>
+            <div class="co-leader-badge">Co-Leader</div>
           </div>
           <div class="member-back">
             <p>Sharp shooter and silent hunter who dominates from the shadows.</p>
@@ -309,6 +321,71 @@
       </div>
     </section>
   </main>
+
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS("particles-js", {
+      "particles": {
+        "number": {
+          "value": 80,
+          "density": {
+            "enable": true,
+            "value_area": 800
+          }
+        },
+        "color": {
+          "value": "#0ff"
+        },
+        "shape": {
+          "type": "circle"
+        },
+        "opacity": {
+          "value": 0.5,
+          "random": true
+        },
+        "size": {
+          "value": 3,
+          "random": true
+        },
+        "line_linked": {
+          "enable": true,
+          "distance": 150,
+          "color": "#0ff",
+          "opacity": 0.4,
+          "width": 1
+        },
+        "move": {
+          "enable": true,
+          "speed": 2
+        }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": {
+            "enable": true,
+            "mode": "grab"
+          },
+          "onclick": {
+            "enable": true,
+            "mode": "push"
+          }
+        },
+        "modes": {
+          "grab": {
+            "distance": 200,
+            "line_linked": {
+              "opacity": 0.5
+            }
+          },
+          "push": {
+            "particles_nb": 4
+          }
+        }
+      },
+      "retina_detect": true
+    });
+  </script>
 
   <script>
     window.addEventListener('load', () => {
