@@ -21,34 +21,36 @@
     #loading-screen {
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at center, #2e1a0f, #000000 80%);
+      background: radial-gradient(circle at center, #000000, #000000 80%);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       z-index: 9999;
-      color: #ff4f00;
+      color: #0ff;
       font-size: 2rem;
       font-weight: bold;
       text-shadow:
-        0 0 5px #ff4f00,
-        0 0 20px #ff4f00,
-        0 0 30px #ff4f00,
-        0 0 40px #ff4f00;
+        0 0 5px #0ff,
+        0 0 20px #0ff,
+        0 0 30px #0ff,
+        0 0 40px #0ff;
       user-select: none;
+      text-align: center;
+      padding: 0 1rem;
     }
 
     .spinner {
       margin-top: 2rem;
       width: 60px;
       height: 60px;
-      border: 6px solid #ff4f00;
+      border: 6px solid #0ff;
       border-top: 6px solid transparent;
       border-radius: 50%;
       animation: spin 1.2s linear infinite;
       box-shadow:
-        0 0 10px #ff4f00,
-        0 0 20px #ff4f00;
+        0 0 10px #0ff,
+        0 0 20px #0ff;
     }
 
     @keyframes spin {
@@ -269,6 +271,8 @@
       pointer-events: none;
       transform: translate(-50%, -50%);
       z-index: 10000;
+      transition: opacity 0.5s ease;
+      opacity: 1;
     }
   </style>
 </head>
@@ -362,12 +366,14 @@
 
   <script>
     window.addEventListener('load', () => {
-      document.getElementById('loading-screen').style.display = 'none';
-      fetchServerStatus();
+      setTimeout(() => {
+        document.getElementById('loading-screen').style.display = 'none';
+        fetchServerStatus();
+      }, 5000);
     });
 
     function openDiscord() {
-      window.open('https://landlord-application.vercel.app', '_blank');
+      window.open('https://discord.gg/bs75CXT9wV', '_blank');
     }
 
     function openRules() {
@@ -386,17 +392,79 @@
           `<strong>${attributes.name}</strong><br>Players: ${attributes.players}/${attributes.maxPlayers} - Queue: ${attributes.details.rust_queued_players ?? 0}`;
       } catch (error) {
         document.getElementById('server-status').textContent = 'Server status unavailable.';
-        console.error('BattleMetrics API error:', error);
+      } finally {
+        setTimeout(fetchServerStatus, 30000); // refresh every 30s
       }
     }
   </script>
 
   <script>
+    // Cursor movement and lag effect
     const cursor = document.getElementById('cursor');
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let cursorX = mouseX;
+    let cursorY = mouseY;
+    let idleTimeout;
+
     document.addEventListener('mousemove', e => {
-      cursor.style.left = e.clientX + 'px';
-      cursor.style.top = e.clientY + 'px';
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      // Reset idle timer and show cursor on movement
+      clearTimeout(idleTimeout);
+      cursor.style.opacity = '1';
+      startIdleTimer();
     });
+
+    function animate() {
+      cursorX += (mouseX - cursorX) * 0.15;
+      cursorY += (mouseY - cursorY) * 0.15;
+      cursor.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
+      requestAnimationFrame(animate);
+    }
+
+    function startIdleTimer() {
+      idleTimeout = setTimeout(() => {
+        cursor.style.opacity = '0'; // fade out after 3 seconds idle
+      }, 3000);
+    }
+
+    startIdleTimer();
+    animate();
+
+    // Loading screen text randomizer
+    const loadingScreen = document.getElementById('loading-screen');
+    const loadingMessages = [
+       "Loading Rust server...",
+      "Spawning nakeds...",
+      "Rolling for AK kits...",
+      "Despawning your loot...",
+      "Waiting for the raid block to end...",
+      "Checking TC upkeep...",
+      "Reading clan drama logs...",
+      "Collecting your sulfur...",
+      "Stack splitting your explosives...",
+      "Filling vending machines...",
+      "Adding more Bradley drops...",
+      "Stealing your horse...",
+      "Watching you farm nodes...",
+      "Counting scrap in Outpost...",
+      "Flooding your base with nakeds...",
+      "Deploying roof campers...",
+      "Spawning minicopters...",
+      "Fixing your base foundations...",
+      "Loading gunpowder barrels...",
+      "Checking map for hot spots...",
+      "Rolling a 6 on your blueprint...",
+      "Selling you a roof hatch...",
+      "Waiting for the event helicopter...",
+      "Restocking your barrels..."
+    ];
+
+    setInterval(() => {
+      const randomIndex = Math.floor(Math.random() * loadingMessages.length);
+      loadingScreen.childNodes[0].nodeValue = loadingMessages[randomIndex];
+    }, 1500);
   </script>
 </body>
 </html>
