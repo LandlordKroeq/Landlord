@@ -16,240 +16,105 @@
       overflow: hidden;
       flex-direction: column;
       cursor: none;
+      transition: margin-left 0.3s ease;
     }
 
-    #loading-screen {
+    /* Pullout Menu Styles */
+    #clicker-menu {
       position: fixed;
-      inset: 0;
-      background: radial-gradient(circle at center, #000000, #000000 80%);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      color: #0ff;
-      font-size: 2rem;
-      font-weight: bold;
-      text-shadow:
-        0 0 5px #0ff,
-        0 0 20px #0ff,
-        0 0 30px #0ff,
-        0 0 40px #0ff;
-      user-select: none;
-      text-align: center;
-      padding: 0 1rem;
-    }
-
-    .spinner {
-      margin-top: 2rem;
-      width: 60px;
-      height: 60px;
-      border: 6px solid #0ff;
-      border-top: 6px solid transparent;
-      border-radius: 50%;
-      animation: spin 1.2s linear infinite;
-      box-shadow:
-        0 0 10px #0ff,
-        0 0 20px #0ff;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg);}
-      100% { transform: rotate(360deg);}
-    }
-
-    .main {
-      flex-grow: 1;
+      top: 0;
+      left: 0;
       height: 100vh;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-    }
-
-    header {
-      padding: 2rem;
-      text-align: center;
+      width: 300px;
+      max-width: 80vw;
+      background: rgba(0, 255, 255, 0.1);
+      border-right: 2px solid #0ff;
+      box-shadow: 2px 0 10px #0ff;
+      padding: 1rem;
+      box-sizing: border-box;
+      transform: translateX(-280px);
+      transition: transform 0.3s ease;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1rem;
-      flex-shrink: 0;
-    }
-
-    .neon-logo {
-      font-size: 4rem;
-      font-weight: bold;
-      color: #0ff;
-      text-shadow:
-        0 0 5px #0ff,
-        0 0 10px #0ff,
-        0 0 20px #0ff,
-        0 0 40px #00ffff;
-      animation: neonPulse 3s ease-in-out infinite;
+      z-index: 10000;
       user-select: none;
     }
-
-    @keyframes neonPulse {
-      0%, 100% {
-        text-shadow:
-          0 0 5px #0ff,
-          0 0 10px #0ff,
-          0 0 20px #0ff,
-          0 0 40px #00ffff;
-        transform: scale(1);
-      }
-      50% {
-        text-shadow:
-          0 0 10px #0ff,
-          0 0 20px #0ff,
-          0 0 40px #00ffff,
-          0 0 60px #00ffff;
-        transform: scale(1.1);
-      }
+    #clicker-menu.open {
+      transform: translateX(0);
     }
 
-    #server-status {
-      margin-top: 1rem;
+    #clicker-toggle {
+      position: fixed;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      background: #000;
+      border: 2px solid #0ff;
+      border-right: none;
+      border-radius: 0 5px 5px 0;
+      color: #0ff;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      z-index: 10001;
+      user-select: none;
+      text-align: center;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      box-shadow:
+        0 0 5px #0ff,
+        0 0 10px #0ff;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    #clicker-toggle:hover {
+      background-color: #0ff;
+      color: #000;
+    }
+
+    #clicker-menu h3 {
+      margin: 0 0 1rem;
       font-size: 1.5rem;
       color: #0ff;
-      text-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
+      text-shadow:
+        0 0 5px #0ff,
+        0 0 10px #0ff;
+      user-select: none;
     }
 
-    .buttons {
-      margin-top: 1rem;
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-    }
-
-    .buttons button {
-      background-color: transparent;
+    #farmBtn {
+      background: none;
       border: 2px solid #0ff;
       color: #0ff;
-      padding: 0.5rem 1.5rem;
+      padding: 10px 20px;
       font-family: 'Courier New', Courier, monospace;
       font-weight: bold;
       cursor: pointer;
       border-radius: 5px;
       transition: background-color 0.3s, color 0.3s;
-    }
-
-    .buttons button:hover {
-      background-color: #0ff;
-      color: #000;
-    }
-
-    .members {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      padding: 2rem;
-      gap: 2rem;
-      flex-grow: 1;
-      overflow-y: auto;
-      perspective: 1000px;
-    }
-
-    .member {
-      position: relative;
-      width: 220px;
-      height: 280px;
-      margin: 1rem;
-      flex-shrink: 0;
-      perspective: 1000px;
-    }
-
-    .member-inner {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      transition: transform 0.6s;
-      transform-style: preserve-3d;
-      box-shadow: 0 0 10px #0ff;
-      border-radius: 10px;
-    }
-
-    .member:hover .member-inner {
-      transform: rotateY(180deg);
-    }
-
-    .member-front, .member-back {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 10px;
-      background: rgba(0, 255, 255, 0.1);
-      border: 1px solid #0ff;
-      color: #0ff;
-      text-align: center;
-      backface-visibility: hidden;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 1rem;
-    }
-
-    .member-front img {
-      border-radius: 50%;
-      border: 2px solid #0ff;
-      width: 120px;
-      height: 120px;
       margin-bottom: 1rem;
-      object-fit: cover;
-      flex-shrink: 0;
-      align-self: center;
+      user-select: none;
     }
-
-    .member-front h2 {
-      margin: 0;
-    }
-
-    .member-front p {
-      margin-top: 0.25rem;
-      color: #b0ffff;
-      font-weight: 600;
-    }
-
-    .co-leader-badge {
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #0ff;
-      color: #000;
-      font-weight: bold;
-      font-size: 0.8rem;
-      padding: 2px 8px;
-      border-radius: 12px;
-      text-transform: uppercase;
-      box-shadow: 0 0 5px #0ff;
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    .member-back {
-      transform: rotateY(180deg);
-      justify-content: flex-start;
-      padding-top: 1rem;
-      font-size: 1rem;
-      color: #b0ffff;
-      text-shadow: 0 0 5px #0ff;
-    }
-
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    ::-webkit-scrollbar-thumb {
+    #farmBtn:hover {
       background-color: #0ff;
-      border-radius: 4px;
+      color: #000;
     }
 
-    ::-webkit-scrollbar-track {
-      background-color: #000;
+    #counter {
+      font-size: 1.3rem;
+      color: #0ff;
+      text-shadow:
+        0 0 5px #0ff,
+        0 0 10px #0ff;
+      user-select: none;
     }
 
+    /* Shift main content when menu open */
+    body.menu-open {
+      margin-left: 300px;
+    }
+
+    /* Your existing styles */
     #particles-js {
       position: fixed;
       top: 0;
@@ -259,20 +124,188 @@
       z-index: -1;
     }
 
+    .neon-logo {
+      font-size: 4rem;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 0.5rem;
+      color: #0ff;
+      text-shadow:
+        0 0 5px #0ff,
+        0 0 10px #0ff,
+        0 0 20px #0ff,
+        0 0 40px #0ff;
+    }
+
+    #server-status {
+      font-size: 1.5rem;
+      text-align: center;
+      margin: 0.5rem 0;
+      color: #0ff;
+      text-shadow:
+        0 0 5px #0ff,
+        0 0 10px #0ff;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      background: none;
+      border: 2px solid #0ff;
+      color: #0ff;
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: bold;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0ff;
+      color: #000;
+    }
+
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 2rem 2rem 2rem;
+    }
+
+    .members {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .member {
+      perspective: 1000px;
+      width: 250px;
+      height: 350px;
+      cursor: pointer;
+      margin-bottom: 2rem;
+    }
+
+    .member-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+      box-shadow:
+        0 0 5px #0ff,
+        0 0 10px #0ff,
+        0 0 20px #0ff;
+      border-radius: 15px;
+    }
+
+    .member:hover .member-inner {
+      transform: rotateY(180deg);
+    }
+
+    .member-front,
+    .member-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 15px;
+      background: rgba(0, 255, 255, 0.05);
+      color: #0ff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 1rem;
+      box-sizing: border-box;
+      border: 1px solid #0ff;
+      user-select: none;
+    }
+
+    .member-front img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+      border: 2px solid #0ff;
+    }
+
+    .member-back {
+      transform: rotateY(180deg);
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
+    .co-leader-badge {
+      margin-top: 0.5rem;
+      padding: 3px 8px;
+      border: 2px solid #0ff;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-shadow:
+        0 0 5px #0ff,
+        0 0 10px #0ff;
+      user-select: none;
+    }
+
+    #loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      color: #0ff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      font-weight: bold;
+      z-index: 9999;
+      user-select: none;
+    }
+
+    .spinner {
+      margin-top: 1rem;
+      border: 4px solid #0ff;
+      border-top: 4px solid transparent;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      user-select: none;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
     #cursor {
       position: fixed;
       top: 0;
       left: 0;
-      width: 6px;
-      height: 6px;
+      width: 25px;
+      height: 25px;
       border-radius: 50%;
       background: #0ff;
-      box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+      opacity: 0.8;
       pointer-events: none;
       transform: translate(-50%, -50%);
-      z-index: 10000;
-      transition: opacity 0.5s ease;
-      opacity: 1;
+      transition: opacity 0.3s ease;
+      user-select: none;
+      box-shadow:
+        0 0 10px #0ff,
+        0 0 20px #0ff;
     }
   </style>
 </head>
@@ -283,6 +316,14 @@
     Loading Rust server...
     <div class="spinner"></div>
   </div>
+
+  <!-- Pullout clicker menu -->
+  <div id="clicker-menu" aria-label="Rust resource farming clicker game">
+    <h3>Farm Rust Resources</h3>
+    <button id="farmBtn">Farm Sulfur</button>
+    <p>Sulfur collected: <span id="counter">0</span></p>
+  </div>
+  <button id="clicker-toggle" aria-expanded="false" aria-controls="clicker-menu">Farm Sulfur</button>
 
   <main class="main">
     <header>
@@ -410,61 +451,57 @@
     document.addEventListener('mousemove', e => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-      // Reset idle timer and show cursor on movement
       clearTimeout(idleTimeout);
       cursor.style.opacity = '1';
       startIdleTimer();
     });
 
     function animate() {
-      cursorX += (mouseX - cursorX) * 0.15;
-      cursorY += (mouseY - cursorY) * 0.15;
-      cursor.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
+      cursorX += (mouseX - cursorX) * 0.1;
+      cursorY += (mouseY - cursorY) * 0.1;
+      cursor.style.left = cursorX + 'px';
+      cursor.style.top = cursorY + 'px';
       requestAnimationFrame(animate);
     }
+    animate();
 
     function startIdleTimer() {
       idleTimeout = setTimeout(() => {
-        cursor.style.opacity = '0'; // fade out after 3 seconds idle
-      }, 3000);
+        cursor.style.opacity = '0';
+      }, 1500);
     }
-
     startIdleTimer();
-    animate();
 
-    // Loading screen text randomizer
-    const loadingScreen = document.getElementById('loading-screen');
-    const loadingMessages = [
-       "Loading Rust server...",
-      "Spawning nakeds...",
-      "Rolling for AK kits...",
-      "Despawning your loot...",
-      "Waiting for the raid block to end...",
-      "Checking TC upkeep...",
-      "Reading clan drama logs...",
-      "Collecting your sulfur...",
-      "Stack splitting your explosives...",
-      "Filling vending machines...",
-      "Adding more Bradley drops...",
-      "Stealing your horse...",
-      "Watching you farm nodes...",
-      "Counting scrap in Outpost...",
-      "Flooding your base with nakeds...",
-      "Deploying roof campers...",
-      "Spawning minicopters...",
-      "Fixing your base foundations...",
-      "Loading gunpowder barrels...",
-      "Checking map for hot spots...",
-      "Rolling a 6 on your blueprint...",
-      "Selling you a roof hatch...",
-      "Waiting for the event helicopter...",
-      "Restocking your barrels..."
-    ];
+    // Hover glow effect for buttons
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(btn => {
+      btn.addEventListener('mouseenter', () => {
+        cursor.style.boxShadow = '0 0 15px #0ff, 0 0 30px #0ff';
+      });
+      btn.addEventListener('mouseleave', () => {
+        cursor.style.boxShadow = 'none';
+      });
+    });
 
-    setInterval(() => {
-      const randomIndex = Math.floor(Math.random() * loadingMessages.length);
-      loadingScreen.childNodes[0].nodeValue = loadingMessages[randomIndex];
-    }, 1500);
+    // Pullout menu toggle
+    const toggleBtn = document.getElementById('clicker-toggle');
+    const menu = document.getElementById('clicker-menu');
+
+    toggleBtn.addEventListener('click', () => {
+      const isOpen = menu.classList.toggle('open');
+      toggleBtn.setAttribute('aria-expanded', isOpen);
+      document.body.classList.toggle('menu-open', isOpen);
+    });
+
+    // Rust clicker game logic
+    const farmBtn = document.getElementById('farmBtn');
+    const counterDisplay = document.getElementById('counter');
+    let sulfurCount = 0;
+
+    farmBtn.addEventListener('click', () => {
+      sulfurCount++;
+      counterDisplay.textContent = sulfurCount;
+    });
   </script>
 </body>
 </html>
