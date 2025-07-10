@@ -493,15 +493,105 @@
       document.body.classList.toggle('menu-open', isOpen);
     });
 
-    // Rust clicker game logic
-    const farmBtn = document.getElementById('farmBtn');
-    const counterDisplay = document.getElementById('counter');
-    let sulfurCount = 0;
+// Rust clicker game logic
+const farmBtn = document.getElementById('farmBtn');
+const counterDisplay = document.getElementById('counter');
 
-    farmBtn.addEventListener('click', () => {
-      sulfurCount++;
-      counterDisplay.textContent = sulfurCount;
-    });
+let sulfurCount = 0;
+let sulfurPerClick = 1;
+let sulfurPerSecond = 0;
+
+// Upgrade variables
+const upgradeCostBase = 10;
+let upgradeLevel = 0;
+
+// Auto farmer variables
+const farmerCostBase = 25;
+let farmerCount = 0;
+
+// Create upgrade and farmer buttons dynamically and add to menu
+const upgradeBtn = document.createElement('button');
+upgradeBtn.id = 'upgradeBtn';
+upgradeBtn.textContent = `Upgrade Pickaxe (Cost: ${upgradeCostBase})`;
+upgradeBtn.style.marginBottom = '1rem';
+
+const buyFarmerBtn = document.createElement('button');
+buyFarmerBtn.id = 'buyFarmerBtn';
+buyFarmerBtn.textContent = `Buy Auto Farmer (Cost: ${farmerCostBase})`;
+
+// Insert buttons after farmBtn inside clicker-menu
+farmBtn.insertAdjacentElement('afterend', upgradeBtn);
+upgradeBtn.insertAdjacentElement('afterend', buyFarmerBtn);
+
+// Add sulfur per second display
+const spsDisplay = document.createElement('p');
+spsDisplay.textContent = `Sulfur per second: 0`;
+spsDisplay.style.marginTop = '0.5rem';
+buyFarmerBtn.insertAdjacentElement('afterend', spsDisplay);
+
+// Add sulfur per click display
+const spcDisplay = document.createElement('p');
+spcDisplay.textContent = `Sulfur per click: ${sulfurPerClick}`;
+spcDisplay.style.marginTop = '0.5rem';
+spcDisplay.style.marginBottom = '1rem';
+upgradeBtn.insertAdjacentElement('afterend', spcDisplay);
+
+// Farm button click increases sulfur by sulfurPerClick
+farmBtn.addEventListener('click', () => {
+  sulfurCount += sulfurPerClick;
+  updateDisplay();
+});
+
+// Upgrade button buys upgrade to increase sulfurPerClick
+upgradeBtn.addEventListener('click', () => {
+  const cost = Math.floor(upgradeCostBase * Math.pow(1.7, upgradeLevel));
+  if (sulfurCount >= cost) {
+    sulfurCount -= cost;
+    upgradeLevel++;
+    sulfurPerClick = 1 + upgradeLevel * 2; // increase by 2 per upgrade
+    updateDisplay();
+  }
+});
+
+// Buy auto farmer
+buyFarmerBtn.addEventListener('click', () => {
+  const cost = Math.floor(farmerCostBase * Math.pow(1.5, farmerCount));
+  if (sulfurCount >= cost) {
+    sulfurCount -= cost;
+    farmerCount++;
+    sulfurPerSecond = farmerCount * 1; // each farmer adds 1 sulfur/sec
+    updateDisplay();
+  }
+});
+
+// Auto farmer sulfur increment every second
+setInterval(() => {
+  sulfurCount += sulfurPerSecond;
+  updateDisplay();
+}, 1000);
+
+// Update all displays and buttons (enable/disable)
+function updateDisplay() {
+  counterDisplay.textContent = sulfurCount;
+
+  // Update upgrade button text and enable/disable
+  const upgradeCost = Math.floor(upgradeCostBase * Math.pow(1.7, upgradeLevel));
+  upgradeBtn.textContent = `Upgrade Pickaxe (Cost: ${upgradeCost})`;
+  upgradeBtn.disabled = sulfurCount < upgradeCost;
+
+  // Update farmer button text and enable/disable
+  const farmerCost = Math.floor(farmerCostBase * Math.pow(1.5, farmerCount));
+  buyFarmerBtn.textContent = `Buy Auto Farmer (Cost: ${farmerCost})`;
+  buyFarmerBtn.disabled = sulfurCount < farmerCost;
+
+  // Update SPS and SPC displays
+  spsDisplay.textContent = `Sulfur per second: ${sulfurPerSecond}`;
+  spcDisplay.textContent = `Sulfur per click: ${sulfurPerClick}`;
+}
+
+// Initialize display
+updateDisplay();
+
   </script>
 </body>
 </html>
